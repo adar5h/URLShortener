@@ -1,25 +1,25 @@
 class UrlsController < ApplicationController
 
+
   skip_before_action :verify_authenticity_token
 
   def index
     @urls = Url.all
+    render json: @urls, status: :ok
   end
 
   def create
-    url = Url.new(url_params)
-    url.short_url =SecureRandom.hex(3)
-
-    if url.save!
-      render json: {url: url}, status: :ok
-    else
-      render json: "Error"
-    end
+    @url = Url.new(url_params)
+    @url.short_url = SecureRandom.hex(3)
+      if @url.save!
+        render json: {url: @url}, status: :ok
+      else
+        render json: "Error"
+      end
   end
 
   def show
     @url = Url.find_by(short_url: params[:short_url])
-
     render json: @url.sanitize
   end
 

@@ -7,8 +7,9 @@ Rails.application.routes.draw do
   # # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   resources :urls, only: [:index, :new, :create, :show]
-   resources :users, only: [:index, :new, :create, :show]
-   get "/:url_id" => "urls#redirect"
+  resources :users, only: [:index, :new, :create, :show]
+  get "/:url_id" => "urls#redirect"
+  root "urls#index"
   # Defines the root path route ("/")
   # root "articles#index"
 end
