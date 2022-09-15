@@ -1,16 +1,19 @@
 class UrlsController < ApplicationController
 
+  before_action :authentication
 
   skip_before_action :verify_authenticity_token
 
+  #Displays all the URLs in db
   def index
     @urls = Url.all
     render json: @urls, status: :ok
   end
 
+  #
   def create
-    @url = Url.new(url_params)
-    @url.short_url = SecureRandom.hex(3)
+    @url = Url.new(url_params) #Creating a new record
+    @url.short_url = SecureRandom.hex(3) #Creating a random hexadecimal code
       if @url.save!
         render json: {url: @url}, status: :ok
       else
@@ -18,18 +21,21 @@ class UrlsController < ApplicationController
       end
   end
 
+  # To view a particular record
   def show
     @url = Url.find_by(short_url: params[:short_url])
-    render json: @url.sanitize
+    render json: @url
   end
 
   def redirect
-    puts ".."
-    puts params[:url_id]
-    url = Url.find_by(short_url: params[:url_id])
-    url.click_count += 1
-    url.save!
-    redirect_to url.long_url, allow_other_host: true
+      @url = Url.find_by(short_url: params[:url_id])
+      if @url.present?
+        @url.click_count += 1
+        @url.save!
+        redirect_to @url.long_url, allow_other_host: true
+      else
+        render json: "Url not valid"
+      end
   end
 
   private
@@ -40,3 +46,6 @@ class UrlsController < ApplicationController
 
 
 end
+
+#params
+
