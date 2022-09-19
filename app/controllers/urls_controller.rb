@@ -1,6 +1,6 @@
 class UrlsController < ApplicationController
 
-  before_action :authentication
+  before_action :authentication, except:[:redirect]
 
   skip_before_action :verify_authenticity_token
 
@@ -23,7 +23,9 @@ class UrlsController < ApplicationController
 
   # To view a particular record
   def show
-    @url = Url.find_by(short_url: params[:short_url])
+    # @url = Url.find( params[:id])
+    @url = Url.find_by(id: params[:id])
+    puts @url
     render json: @url
   end
 
@@ -46,6 +48,4 @@ class UrlsController < ApplicationController
 
 
 end
-
-#params
 
